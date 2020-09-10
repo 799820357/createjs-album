@@ -1,0 +1,166 @@
+<!doctype html>
+<head>
+<title>图片例子旋转切换</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<style type="text/css">
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    body, div, canvas{
+        image-rendering: optimizeSpeed;
+        -webkit-image-rendering: optimizeSpeed;
+        -webkit-interpolation-mode: nearest-neighbor;
+    }
+    body{font-size:12px; background-color:#fff;}
+    body, html{height:100%;}
+    canvas{
+        display: block;
+        background: #000000;
+    }
+    header{
+        margin: 0 auto 20px;
+        background: #000000;
+        line-height:40px;
+        box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    header h1{
+        width: 1000px;
+        margin: 0 auto;
+        font-size: 16px;
+        color: #ffffff;
+    }
+    article{
+        width: 960px;
+        background: #ffffff;
+        box-shadow: 0 0 6px rgba(0,0,0,0.5);
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    article:after{
+        content: '.';
+        display: block;
+        clear: both;
+        font-size: 0;
+        line-height: 0;
+    }
+    .show-container{
+        float: left;
+        margin: 0 20px 0 0;
+        box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+    .show-menu{
+        float: left;
+    }
+    .show-menu select{
+        height: 24px;
+        font-size: 14px;
+        padding: 0 6px;
+        margin: 0 10px 0 0;
+    }
+    .show-menu dl{
+        line-height:20px;
+    }
+    .show-menu dt{
+        margin: 0 0 20px;
+    }
+</style>
+</head>
+<body>
+    <header>
+        <h1>基于CREATEJS制作：动画展示</h1>
+    </header>
+    <article>
+        <div id="cvNode" class="show-container"></div>
+        <div class="show-menu">
+            <dl>
+                <dt>
+                    类型：
+                    <select id="cvMenu"></select>
+                    画布缩放：
+                    <select id="cvScale">
+                        <option value="1">1倍</option>
+                        <option value="1.5">1.5倍</option>
+                        <option value="2">2倍</option>
+                    </select>
+                </dt>
+                <dd>
+                    依赖库：<strong>easeljs</strong>，<strong>tweenjs</strong>
+                </dd>
+                <dd>
+                    金鱼动画：<strong>变形</strong>，<strong>旋转闪烁</strong>，<strong>旋转3d</strong>，<strong>弹球</strong>，<strong>飘扬</strong>，<strong>网格</strong>，<strong>碎片</strong>，<strong>气泡</strong>
+                </dd>
+            </dl>
+            
+        </div>
+    </article>
+    
+    <script type="text/javascript" src="./js/easeljs.js"></script>
+    <script type="text/javascript" src="./js/tweenjs.js"></script>
+    <script type="text/javascript" src="./js/magpie.js"></script>
+    <script type="text/javascript" src="./js/goldfish.js"></script>
+    <script type="text/javascript" src="./js/album.js"></script>
+    <script type="text/javascript">
+        var goldfishs = ['distortion','rotatetwinkle','rotate3d','pinball','flicker','grid','piece','bubble'];
+        //执行
+        var album = new Album({
+            node : document.getElementById('cvNode'),
+            width : 220,
+            height : 338,
+            resources : [
+                {
+                    name : '1',
+                    src : './images/1.jpg'
+                },
+                {
+                    name : '2',
+                    src : './images/2.jpg'
+                },
+                {
+                    name : '3',
+                    src : './images/3.jpg'
+                },
+                {
+                    name : '4',
+                    src : './images/4.jpg'
+                },
+                {
+                    name : '5',
+                    src : './images/5.jpg'
+                },
+                {
+                    name : '6',
+                    src : './images/6.jpg'
+                }
+            ],
+            goldfishs : goldfishs,
+            triggerCall : function(num){
+                cvMenu.value = num;
+            }
+        });
+        album.init();
+        //创建option
+        (function(){
+            for(var i = 0,len = goldfishs.length; i < len; i++){
+                var option = document.createElement('option');
+                option.setAttribute('value',i);
+                option.innerHTML = goldfishs[i];
+                cvMenu.appendChild(option);
+            }
+        })();
+        cvMenu.onchange = function(){
+            album.trigger(parseInt(this.value));
+        }
+        cvScale.onchange = function(){
+            var scale = parseFloat(this.value);
+            var w = album.canvas.width * scale,
+                h = album.canvas.height * scale;
+            album.canvas.style.cssText = "width:" + w + "px; height:" + h + "px"; 
+        }
+    </script>
+</body>
+</html>
